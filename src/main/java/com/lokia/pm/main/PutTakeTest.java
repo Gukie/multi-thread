@@ -74,7 +74,7 @@ public class PutTakeTest {
 					sum+=seed;
 				}
 				takeSum.getAndAdd(sum);
-				System.err.println("consumed:"+sum);
+//				System.err.println("consumed:"+sum);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -94,7 +94,7 @@ public class PutTakeTest {
 					seed = RandomUtils.generateFakeRandom(seed);
 				}
 				putSum.getAndAdd(sum);
-				System.err.println("produced:"+sum);
+//				System.err.println("produced:"+sum);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
