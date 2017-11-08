@@ -51,6 +51,8 @@ public class PutTakeTest {
 			System.err.println("finished working");
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			executorService.shutdownNow();
 		}
 	}
 	
