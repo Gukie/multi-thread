@@ -48,8 +48,8 @@ public class PutTakeTest {
 				executorService.execute(new Producer());
 			}
 			System.err.println("starting awaiting");
-			barrier.await();
-			barrier.await(); // TODO unsure
+			barrier.await(); // wait all threads ready.
+			barrier.await(); // wait all threads finished. 
 			System.err.println("finished awaiting");
 		} catch (Exception e) {
 			e.printStackTrace();
