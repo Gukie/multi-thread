@@ -22,9 +22,9 @@ public class PutTakeTest {
 
 	public static void main(String[] args) {
 
-		int pairs = 10;
-		int trials = 1000;
-		int capacity = 10;
+		int pairs = 77;
+		int trials = 154855;
+		int capacity = 2;
 		PutTakeTest putTakeTest = new PutTakeTest(pairs, trials, capacity);
 		long start = System.currentTimeMillis();
 		putTakeTest.doWork();
@@ -47,8 +47,10 @@ public class PutTakeTest {
 				executorService.execute(new Consumer());
 				executorService.execute(new Producer());
 			}
+			System.err.println("starting awaiting");
 			barrier.await();
-			System.err.println("finished working");
+			barrier.await(); // TODO unsure
+			System.err.println("finished awaiting");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -56,24 +58,18 @@ public class PutTakeTest {
 		}
 	}
 	
-	public void assertResult() {
-		if(putSum.get() == takeSum.get()){
-			System.out.println("finished: consumed item equals to produced ones");
-			return ;
-		}
-		throw new RuntimeException("consumed item not equals to produced ones");
-	}
-
 	class Consumer implements Runnable {
 		@Override
 		public void run() {
 			try {
 				int sum =0;
+				barrier.await(); // TODO unsure
 				for(int i =0;i<trialNum;i++){
 					int seed = buffer.take();
 					sum+=seed;
 				}
 				takeSum.getAndAdd(sum);
+				barrier.await(); // TODO unsure
 //				System.err.println("consumed:"+sum);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -87,6 +83,7 @@ public class PutTakeTest {
 		public void run() {
 			try {
 				int sum = 0;
+				barrier.await(); // TODO unsure
 				int seed = (int) (this.hashCode() ^ System.nanoTime());
 				for (int i = 0; i < trialNum; i++) {
 					buffer.put(seed);
@@ -94,11 +91,20 @@ public class PutTakeTest {
 					seed = RandomUtils.generateFakeRandom(seed);
 				}
 				putSum.getAndAdd(sum);
+				barrier.await(); // TODO unsure
 //				System.err.println("produced:"+sum);
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
+	}
+	
+	public void assertResult() {
+		if(putSum.get() == takeSum.get()){
+			System.out.println("finished: consumed item equals to produced ones");
+			return ;
+		}
+		throw new RuntimeException("consumed item not equals to produced ones");
 	}
 }

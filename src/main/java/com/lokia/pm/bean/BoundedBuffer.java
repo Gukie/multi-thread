@@ -17,7 +17,7 @@ public class BoundedBuffer<T> {
 	}
 	
 	public void put(T item) throws InterruptedException {
-		System.err.println("trying to put:"+item);
+//		System.err.println("trying to put:"+item);
 		availableSpaces.acquire();
 		doInsert(item);
 		availableItems.release();
@@ -30,11 +30,11 @@ public class BoundedBuffer<T> {
 	}
 	
 	public T take() throws InterruptedException {
-		System.err.println("trying to take:");
+//		System.err.println("trying to take:");
 		availableItems.acquire();
 		T item = doExtract();
 		availableSpaces.release();
-		System.err.println("succeed to take:"+item);
+//		System.err.println("succeed:"+item);
 		return item;
 	}
 
